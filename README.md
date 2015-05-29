@@ -8,6 +8,11 @@ slim-my-invoice is Web Application that aims at facilitating invoices encoding u
 
 * [Apache Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
+## Demo
+
+The Server and the Web Application are deployed and accessible [here](http://slimmyinvoice.org) on `http://slimmyinvoice.org` for testing and demo purposes.
+Note that you need to provide a valid Belgian VAT number as username.
+
 ## Building
 
 ### With Maven
