@@ -1,0 +1,18 @@
+{
+  "name": "slimmyinvoice",
+  "version": "1.0.0",
+  "authors": [
+    "Kevin RENIER <kevin.renier@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.1.1"
+  }
+}
