@@ -18,7 +18,7 @@ v3.+ in your development environment.
 Building is achieved with the following command:
 * Run `mvn clean install` from the root directory 
 
-This command fetches all the project dependencies and creates a WAR file named slimmyinvoice.war in the /target folder.
+This command fetches all the project dependencies and creates a WAR file named `slimmyinvoice.war` in the `/target` folder.
 
 ## Deployment
 In order to deploy the server, please follow the next step:
