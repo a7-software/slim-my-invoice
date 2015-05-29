@@ -1,7 +1,7 @@
 # slim-my-invoice Server + Web Application
 
 This repository contains the source code for the Server and the Web Application of slim-my-invoice.
-slim-my-invoice is Web Application that aims at facilitatnig invoices encoding using OCR.
+slim-my-invoice is Web Application that aims at facilitating invoices encoding using OCR.
 
 
 ## License
@@ -17,14 +17,16 @@ v3.+ in your development environment.
 
 Building is achieved with the following command:
 * Run `mvn clean install` from the root directory 
-This command feteches all the project dependecies and creates a WAR file named slimmyinvoice.war in the /target folder.
+
+This command fetches all the project dependencies and creates a WAR file named slimmyinvoice.war in the /target folder.
 
 ## Deployment
 In order to deploy the server, please follow the next step:
-* Install [Java 6](http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase6-419409.html) and [Tomcat 7](https://tomcat.apache.org/download-70.cgi) on a machine.
-* Create a folder `/var/lib/slimmyinvoice/databases/` and allow read/write permissions on that folder.
-* Rename the WAR file to `ROOT.war`;
+* Install [Java 6](http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase6-419409.html) and [Tomcat 7](https://tomcat.apache.org/download-70.cgi) on a machine
+* Create a folder `/var/lib/slimmyinvoice/databases/` and allow read/write permissions on that folder
+* Rename the WAR file to `ROOT.war`
 * Move it in the folder `/var/lib/tomcat7/webapps/` on the machine
+
 Tomcat will then automatically deploy the server and the web application should be available a few seconds later.
 
 The following command may be useful to display the logs:
