@@ -65,7 +65,6 @@ public class Fingerprint {
         }
     }
 
-    //TODO : test it one time
     private String filterList(List<String> validVATs, String ocrResult) {
 
         double bestScore = 0.0;

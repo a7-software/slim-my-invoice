@@ -102,7 +102,7 @@ public class UploadHandler {
                     DbHandler.getInstance().refreshDatabase();
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    return wrongJson("Unexpected error while refreshing the database!");
+                    return wrongJson("Unexpected error while resetting the database!");
                 }
                 clearHandler();
                 return successUser("DBResetOK");
@@ -241,7 +241,7 @@ public class UploadHandler {
                 supplier = DbHandler.getInstance().retrieveSupplierFromVat(vat);
             } catch (SQLException e) {
                 e.printStackTrace();
-                return wrongJson("Unexpected error while checking in the database for identical supplier!");
+                return wrongJson("Unexpected error while getting supplier!");
             }
             if (supplier != null) { // The supplier is in the local DB
                 invoice.setSupplier(supplier);
@@ -249,7 +249,7 @@ public class UploadHandler {
                     OcrHandler.getInstance().ocrTemplateAnalyse(reqs.getParam("language"), image);
                 } catch (TesseractException e) {
                     e.printStackTrace();
-                    return wrongJson("Unexpected error while performing OCR!");
+                    return wrongJson("Unexpected error while performing OCR on the retrieved supplier!");
                 }
                 displaySaveSupplier = false;
                 displayUpdateSupplier = false;
@@ -261,7 +261,6 @@ public class UploadHandler {
                     displaySaveSupplier = true;
                     displayUpdateSupplier = false;
                     return successJson("Supplier retrieved from the BCE online database.");
-                    //TODO perform auto amounts and date analysis ??
                 } else {
                     invoice.setSupplier(null);
                     return wrongJson("Supplier cannot be retrieved neither from local database nor from BCE online database!");
@@ -286,7 +285,7 @@ public class UploadHandler {
                     return wrongJson("Unexpected error while adding supplier " + supplier.getName() + " (VAT = " + supplier.getVatNumber() + ") in the database");
                 } catch (TesseractException e) {
                     e.printStackTrace();
-                    return wrongJson("Unexpected error while performing OCR!");
+                    return wrongJson("Unexpected error while adding supplier " + supplier.getName() + " (VAT = " + supplier.getVatNumber() + ") in the database");
                 }
             }
         } else if ("update_supplier".equals(analysis)) {
@@ -311,7 +310,7 @@ public class UploadHandler {
                     return wrongJson("Unexpected error while updating supplier " + supplier.getName() + " (VAT = " + supplier.getVatNumber() + ") in the database");
                 } catch (TesseractException e) {
                     e.printStackTrace();
-                    return wrongJson("Unexpected error while performing OCR!");
+                    return wrongJson("Unexpected error while updating supplier " + supplier.getName() + " (VAT = " + supplier.getVatNumber() + ") in the database");
                 }
             }
         } else if ("auto".equals(analysis)) {
@@ -324,7 +323,7 @@ public class UploadHandler {
                 return wrongJson("Unexpected error while retrieving suppliers from the database to perform auto analysis!");
             } catch (TesseractException e) {
                 e.printStackTrace();
-                return wrongJson("Unexpected error while performing OCR!");
+                return wrongJson("Unexpected error while performing OCR on the invoice!");
             }
         } else {
             if (invoice.getSupplier().getName().equals(Invoice.EMPTY)) {

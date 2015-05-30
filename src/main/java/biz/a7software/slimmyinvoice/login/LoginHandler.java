@@ -116,10 +116,10 @@ public class LoginHandler {
             dbUser = retrieveUser(vat);
         } catch (SQLException e) {
             e.printStackTrace();
-            return wrongJson("Unexpected error querying the database for user with such a VAT number!");
+            return wrongJson("Unexpected error when accessing the users database!");
         }
         if (dbUser == null) {
-            return wrongJson("Unknown username! Please check it or register if this is the first time you want to log in!");
+            return wrongJson("Unknown username! Please check it or consider registering if this is the first time you want to log in!");
         } else {
             if (dbUser.getMustUpdate() != null) {
                 if (dbUser.getMustUpdate() < System.currentTimeMillis()) {
@@ -163,7 +163,7 @@ public class LoginHandler {
             user = retrieveUser(vat);
         } catch (SQLException e) {
             e.printStackTrace();
-            return wrongJson("Unexpected error querying the database for user with such a VAT number!");
+            return wrongJson("Unexpected error when accessing the users database!");
         }
         if (user != null) {
             return wrongJson("Already registered! Please consider login instead of registering.");
@@ -195,7 +195,7 @@ public class LoginHandler {
 
         Supplier supplier = HtmlParser.getInstance().retrieveSupplierFromVATNum(vat);
         if (supplier == null) {
-            return wrongJson("Cannot retrieve data from the BCE website. Please retry later! If the problem persists, contact the support.");
+            return wrongJson("Cannot retrieve data from the BCE online database to get. Please retry later! If the problem persists, contact the support.");
         }
 
         String password = reqs.getParam("password");
@@ -204,7 +204,7 @@ public class LoginHandler {
             addUser(user);
         } catch (SQLException e) {
             e.printStackTrace();
-            return wrongJson("Unexpected error adding new user in the database!");
+            return wrongJson("Unexpected error while adding new user in the database!");
 
         }
         DbHandler.getInstance().configureForUser(user);
@@ -238,10 +238,10 @@ public class LoginHandler {
             user = retrieveUser(vat);
         } catch (SQLException e) {
             e.printStackTrace();
-            return wrongJson("Unexpected error querying the database for user with such a VAT number!");
+            return wrongJson("Unexpected error when accessing the users database!");
         }
         if (user == null) {
-            return wrongJson("Unknown username! Please check it or register if this is the first time you want to login!");
+            return wrongJson("Unknown username! Please check it or consider registering if this is the first time you want to login!");
         } else {
             if (user.getMustUpdate() != null) {
                 if (user.getMustUpdate() < System.currentTimeMillis()) {
@@ -270,7 +270,7 @@ public class LoginHandler {
                 updateUser(user);
             } catch (SQLException e) {
                 e.printStackTrace();
-                return wrongJson("Unexpected error adding new password in the database");
+                return wrongJson("Unexpected error while adding new password in the database!");
             }
             return successJson();
         }

@@ -63,7 +63,6 @@ public class Invoice {
         return d1Rounded == d2Rounded || d1Rounded == d2Rounded + 0.01 || d1Rounded == d2Rounded - 0.01;
     }
 
-    // TODO with real date formats the put "isValid" method in class Date
     private boolean isDateValid(String date) {
         return date != EMPTY;
     }
@@ -162,7 +161,7 @@ public class Invoice {
         if (ref == EMPTY) {
             redFields += "ref:";
         }
-        if (!isAmountValid() || !(subtotal == 0.0 && VATrate == 0.0 && VAT == 0.0 && total == 0.0)) {
+        if ((!isAmountValid() || !(subtotal == 0.0 && VATrate == 0.0 && VAT == 0.0 && total == 0.0)) && !(total == subtotal)) {
             if (subtotal == 0.0) {
                 redFields += "sub:";
             }

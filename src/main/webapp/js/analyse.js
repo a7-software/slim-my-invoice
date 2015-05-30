@@ -135,6 +135,7 @@ $(function () {
                 $("#message_success_text").text(data.message);
                 document.getElementById("message_error").style.display = "none";
                 document.getElementById("message_success").style.display = "inherit";
+                document.getElementById("message_success").style.visibility = "visible";
                 if (data.message == "First upload an invoice.") {
                     document.getElementById("message_success").style.color = "#31708f";
                     document.getElementById("message_success").style.backgroundColor = "#d9edf7";

@@ -46,6 +46,10 @@ public class HtmlParser {
         try {
             doc = Jsoup.connect(url).get();
             Element table = doc.select("table").first();
+            if (table == null) {
+                return null;
+            }
+
             Elements elements = table.select("tr");
 
             boolean nameFound = false;

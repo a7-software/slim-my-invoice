@@ -90,8 +90,7 @@ public class OcrHandler {
                     ocrAutoDateAndAmountsAnalyse(supplier, result);// auto-analyse for date and amounts
                     UploadHandler.getInstance().setDisplaySaveSupplier(true);
                     UploadHandler.getInstance().setDisplayUpdateSupplier(false);
-                    return "Supplier has been retrieved from online BCE database whereas date and amounts have " +
-                            "been automatically analysed.";
+                    return "Supplier has been retrieved from online BCE database";
                 }
                 UploadHandler.getInstance().setDisplaySaveSupplier(false);
                 UploadHandler.getInstance().setDisplayUpdateSupplier(false);

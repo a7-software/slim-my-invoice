@@ -48,10 +48,10 @@ public class PasswordRequest {
             dbUser = LoginHandler.getInstance().retrieveUser(vat);
         } catch (SQLException e) {
             e.printStackTrace();
-            return wrongJson("Unexpected error querying the database for user!");
+            return wrongJson("Unexpected error when accessing the users database!");
         }
         if (dbUser == null) {
-            return wrongJson("Unknown username! Please check it!");
+            return wrongJson("Unknown username! Please check it...");
         } else {
             User updated = dbUser;
             try {
@@ -68,10 +68,10 @@ public class PasswordRequest {
                 return wrongJson("Unexpected error while sending email!");
             } catch (SQLException e) {
                 e.printStackTrace();
-                return wrongJson("Unexpected error while renewing password");
+                return wrongJson("Unexpected error while renewing password!");
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
-                return wrongJson("Unexpected error while renewing password");
+                return wrongJson("Unexpected error while renewing password!");
             }
             return successJson(updated.getEmail());
         }
