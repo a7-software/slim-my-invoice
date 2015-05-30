@@ -77,10 +77,10 @@ public class HtmlGenerator {
             html.append("<td width=\"8%\">" + inv.getDate() + "</td>");
             html.append("<td width=\"8%\">" + inv.getRef() + "</td>");
             html.append("<td width=\"30%\">" + inv.getSupplier().getName() + " (" + FormatHandler.getInstance().formatOutputVat(inv.getSupplier().getVatNumber()) + ")" + "</td>");
-            html.append("<td width=\"8%\">€ " + inv.getSubtotal() + "</td>");
+            html.append("<td width=\"8%\">\u20ac " + inv.getSubtotal() + "</td>");
             html.append("<td width=\"5%\">" + inv.getVatRate() + " %</td>");
-            html.append("<td width=\"8%\">€ " + inv.getVAT() + "</td>");
-            html.append("<td width=\"8%\">€ " + inv.getTotal() + "</td>");
+            html.append("<td width=\"8%\">\u20ac " + inv.getVAT() + "</td>");
+            html.append("<td width=\"8%\">\u20ac " + inv.getTotal() + "</td>");
             html.append("</tr>");
 
         }

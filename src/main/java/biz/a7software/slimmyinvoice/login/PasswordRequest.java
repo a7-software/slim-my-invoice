@@ -12,7 +12,7 @@ import java.security.SecureRandom;
 import java.sql.SQLException;
 
 /**
- * The PasswordRequest class handles the “Forgot my password?” procedure (secure password generation, hashing).
+ * The PasswordRequest class handles the - Forgot my password? -  procedure (secure password generation, hashing).
  */
 public class PasswordRequest {
     private static volatile PasswordRequest instance = null;
@@ -31,7 +31,7 @@ public class PasswordRequest {
         return PasswordRequest.instance;
     }
 
-    // Handles a password the “Forgot my password?” procedure request.
+    // Handles a password the - Forgot my password? -  procedure request.
     public JSONObject forgotPassword(StringParams reqs) {
         String username = reqs.getParam("username");
 

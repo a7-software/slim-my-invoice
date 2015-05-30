@@ -275,10 +275,10 @@ $(function () {
                 // Data & Amounts fields
                 $("#date").text(data.date);
                 $("#id").text(data.id);
-                $("#subtotal").text(data.subtotal);
+                $("#subtotal").text("\u20ac" + " " + data.subtotal);
                 $("#vatRate").text(data.vatRate);
-                $("#vat").text(data.vat);
-                $("#total").text(data.total);
+                $("#vat").text("\u20ac" + " " + data.vat);
+                $("#total").text("\u20ac" + " " + data.total);
             }
         }
     }

@@ -7,7 +7,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 /**
- * The FormatHandler class handles formats for display (amounts, VAT number, …) or for validation purposes (VAT number, email, …).
+ * The FormatHandler class handles formats for display (amounts, VAT number, etc.) or for validation purposes (VAT number, email, etc.).
  */
 public class FormatHandler {
 
@@ -137,7 +137,7 @@ public class FormatHandler {
 
     // Formats amounts to be displayed and adds currency.
     public String formatOutputAmount(Double amount) {
-        return "€ " + String.format("%.2f%n", amount);
+        return String.format("%.2f%n", amount);
     }
 
     // Formats VAT rates to be displayed.

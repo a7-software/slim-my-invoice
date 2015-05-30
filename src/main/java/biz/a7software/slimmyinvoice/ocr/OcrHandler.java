@@ -106,7 +106,7 @@ public class OcrHandler {
     private void ocrAutoDateAndAmountsAnalyse(Supplier supplier, String result) {
 
         String ocrWithoutSapce = result.replaceAll("\\s+", "").toLowerCase();
-        Pattern pattern = Pattern.compile("(€|eur|euro|euros)?[0-9]+[,|\\.][0-9]{2}(€|eur|euro|euros)?");
+        Pattern pattern = Pattern.compile("(\\u20ac|eur|euro|euros)?[0-9]+[,|\\.][0-9]{2}(\\u20ac|eur|euro|euros)?");
         Matcher matcher = pattern.matcher(ocrWithoutSapce);
 
         //List<String> validVATs = new ArrayList<String>();
