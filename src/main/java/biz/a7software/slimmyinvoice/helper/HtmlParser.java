@@ -15,9 +15,9 @@ import java.io.IOException;
  */
 public class HtmlParser {
 
-    private static String NAME_FIELD = "Dénomination sociale";
-    private static String ADDRESS_FIELD = "Adresse du siège social";
-    private static String PRIVATE_ADDRESS_FIELD = "Pas de données disponibles à cause de la protection de la vie privée";
+    private static String NAME_FIELD = "nomination sociale";
+    private static String ADDRESS_FIELD = "Adresse du si";
+    private static String PRIVATE_ADDRESS_FIELD = "cause de la protection de la vie priv";
 
 
     private static volatile HtmlParser instance = null;
