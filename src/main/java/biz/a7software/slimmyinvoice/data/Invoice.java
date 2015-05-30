@@ -50,7 +50,11 @@ public class Invoice {
 
 
     public Boolean isValid() {
-        return isDateValid(date) && isSupplierValid(supplier) && !ref.equals(EMPTY) && compareDoubleIgnoreRounding(subtotal + VAT, total) && compareDoubleIgnoreRounding(subtotal * (VATrate/100), VAT);
+        return isDateValid(date) && isSupplierValid(supplier) && !ref.equals(EMPTY) && isAmountValid();
+    }
+
+    public Boolean isAmountValid() {
+        return compareDoubleIgnoreRounding(subtotal + VAT, total) && compareDoubleIgnoreRounding(subtotal * (VATrate/100), VAT);
     }
 
     public Boolean compareDoubleIgnoreRounding(Double d1, Double d2) {
@@ -76,23 +80,29 @@ public class Invoice {
         Double VATrate = this.VATrate / 100;
 
         if (subtotal == 0.0 && VATrate == 0.0 && VAT != 0.0 && total != 0.0) {
-            subtotal = total - VAT;
-            this.VATrate = 100 * (VAT / subtotal);
-        } else if (subtotal == 0.0 && VATrate != 0.0 && VAT == 0.0 && total != 0.0) {
+            if ((VAT >= 0.0 && total >= 0.0) || (VAT <= 0.0 && total <= 0.0)) {
+                subtotal = total - VAT;
+                this.VATrate = 100 * (VAT / subtotal);
+            }
+        } else if (subtotal == 0.0 && VATrate > 0.0 && VAT == 0.0 && total != 0.0) {
             subtotal = total / VATrate;
             VAT = total - subtotal;
         } else if (subtotal != 0.0 && VATrate == 0.0 && VAT == 0.0 && total != 0.0) {
-            VAT = total - subtotal;
-            this.VATrate = 100 * (VAT / subtotal);
-        } else if (subtotal == 0.0 && VATrate != 0.0 && VAT != 0.0 && total == 0.0) {
+            if ((subtotal >= 0.0 && total >= 0.0) || (subtotal <= 0.0 && total <= 0.0)) {
+                VAT = total - subtotal;
+                this.VATrate = 100 * (VAT / subtotal);
+            }
+        } else if (subtotal == 0.0 && VATrate > 0.0 && VAT != 0.0 && total == 0.0) {
             subtotal = VAT / VATrate;
             total = subtotal + VAT;
-        } else if (subtotal != 0.0 && VATrate != 0.0 && VAT == 0.0 && total == 0.0) {
+        } else if (subtotal != 0.0 && VATrate > 0.0 && VAT == 0.0 && total == 0.0) {
             VAT = subtotal * VATrate;
             total = subtotal + VAT;
         } else if (subtotal != 0.0 && VATrate == 0.0 && VAT != 0.0 && total == 0.0) {
-            total = subtotal + VAT;
-            this.VATrate = 100 * (VAT / subtotal);
+            if ((subtotal >= 0.0 && VAT >= 0.0) || (subtotal <= 0.0 && VAT <= 0.0)) {
+                total = subtotal + VAT;
+                this.VATrate = 100 * (VAT / subtotal);
+            }
         }
     }
 
@@ -100,22 +110,22 @@ public class Invoice {
     public void autoComplete3OutOf4() {
         Double VATrate = this.VATrate / 100;
 
-        if (subtotal != 0.0 && VATrate != 0.0 && VAT != 0.0) {
+        if (subtotal != 0.0 && VATrate > 0.0 && VAT != 0.0) {
             if (compareDoubleIgnoreRounding(subtotal * VATrate, VAT)) {
                 total = subtotal + VAT;
             }
         }
-        if (subtotal != 0.0 && VATrate != 0.0 && total != 0.0) {
+        if (subtotal != 0.0 && VATrate > 0.0 && total != 0.0) {
             if (compareDoubleIgnoreRounding(subtotal * (1 + VATrate), total)) {
                 VAT = total - subtotal;
             }
         }
         if (subtotal != 0.0 && VAT != 0.0 && total != 0.0) {
-            if (compareDoubleIgnoreRounding(subtotal + VAT, total)) {
+            if (compareDoubleIgnoreRounding(subtotal + VAT, total) && (VAT / subtotal) >= 0) {
                 this.VATrate = 100 * (VAT / subtotal);
             }
         }
-        if (VATrate != 0.0 && VAT != 0.0 && total != 0.0) {
+        if (VATrate > 0.0 && VAT != 0.0 && total != 0.0) {
             if (compareDoubleIgnoreRounding(VAT * (1 + VATrate), total * VATrate)) {
                 subtotal = total - VAT;
             }
@@ -152,17 +162,19 @@ public class Invoice {
         if (ref == EMPTY) {
             redFields += "ref:";
         }
-        if (subtotal == 0.0) {
-            redFields += "sub:";
-        }
-        if (VATrate == 0.0) {
-            redFields += "rate:";
-        }
-        if (VAT == 0.0) {
-            redFields += "vat:";
-        }
-        if (total == 0.0) {
-            redFields += "total:";
+        if (!isAmountValid() || !(subtotal == 0.0 && VATrate == 0.0 && VAT == 0.0 && total == 0.0)) {
+            if (subtotal == 0.0) {
+                redFields += "sub:";
+            }
+            if (VATrate == 0.0) {
+                redFields += "rate:";
+            }
+            if (VAT == 0.0) {
+                redFields += "vat:";
+            }
+            if (total == 0.0) {
+                redFields += "total:";
+            }
         }
 
         Double VATrate = this.VATrate / 100;
@@ -210,7 +222,11 @@ public class Invoice {
     }
 
     public void setDate(String date) {
-        this.date = date.trim();
+        if (date.equals(EMPTY)) {
+            this.date = EMPTY;
+        } else {
+            this.date = date.trim();
+        }
     }
 
     public Integer getId() {
@@ -226,7 +242,11 @@ public class Invoice {
     }
 
     public void setRef(String ref) {
-        this.ref = ref.trim();
+        if (ref.equals(EMPTY)) {
+            this.ref = EMPTY;
+        } else {
+            this.ref = ref.trim();
+        }
     }
 
     public Supplier getSupplier() {

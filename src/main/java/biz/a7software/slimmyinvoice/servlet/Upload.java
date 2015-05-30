@@ -37,7 +37,6 @@ public class Upload extends HttpServlet {
 
         StringParams reqs = new StringParams(request.getParameterMap());
 
-        //System.out.println("Hash = " + reqs.getParam("password"));
         if (false) {
             try {
                 LoginHandler.getInstance().resetUserTable();

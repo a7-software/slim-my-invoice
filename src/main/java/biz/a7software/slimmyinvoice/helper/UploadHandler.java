@@ -337,7 +337,6 @@ public class UploadHandler {
                     e.printStackTrace();
                     return wrongJson(e.getMessage());
                 }
-                invoice.autoCompleteManualAnalysis();
                 return successJson("Manual entry for \"" + reqs.getParam("field") + "\" registered");
             } else {
                 areas = new AreaList(reqs.getParam("ocr_areas"));
@@ -356,7 +355,6 @@ public class UploadHandler {
                     if (displaySaveSupplier == false) {
                         displayUpdateSupplier = true;
                     }
-                    invoice.autoCompleteManualAnalysis();
                     return successJson(analysis + " zone OCR'ed");
                 }
             }
@@ -370,30 +368,34 @@ public class UploadHandler {
         String field = reqs.getParam("field");
 
         if (field.equals("date")) {
-            String date = reqs.getParam("date").replaceAll("\\s+", "") != "" ? reqs.getParam("date").trim() : " ";
+            String date = reqs.getParam("date").trim().equals("") ? Invoice.EMPTY : reqs.getParam("date").trim();
             invoice.setDate(date);
             return;
         } else if (field.equals("ref")) {
-            String id = reqs.getParam("id").replaceAll("\\s+", "") != "" ? reqs.getParam("id").trim() : " ";
+            String id = reqs.getParam("id").trim().equals("") ? Invoice.EMPTY : reqs.getParam("id").trim();
             invoice.setRef(id);
             return;
         } else {
+            Double value = 0.0;
             if (field.equals("subtotal")) {
-                Double value = FormatHandler.getInstance().extractAmount(reqs.getParam("subtotal"));
+                value = FormatHandler.getInstance().extractAmount(reqs.getParam("subtotal"));
                 checkValue(value);
                 invoice.setSubtotal(value);
             } else if (field.equals("vatRate")) {
-                Double value = FormatHandler.getInstance().extractAmount(reqs.getParam("vatRate"));
+                value = FormatHandler.getInstance().extractAmount(reqs.getParam("vatRate"));
                 checkValue(value);
                 invoice.setVATrate(value);
             } else if (field.equals("vat")) {
-                Double value = FormatHandler.getInstance().extractAmount(reqs.getParam("vat"));
+                value = FormatHandler.getInstance().extractAmount(reqs.getParam("vat"));
                 checkValue(value);
                 invoice.setVAT(value);
             } else if (field.equals("total")) {
-                Double value = FormatHandler.getInstance().extractAmount(reqs.getParam("total"));
+                value = FormatHandler.getInstance().extractAmount(reqs.getParam("total"));
                 checkValue(value);
                 invoice.setTotal(value);
+            }
+            if ((double) value != 0.0) {
+                invoice.autoCompleteManualAnalysis();
             }
         }
     }
@@ -444,6 +446,9 @@ public class UploadHandler {
                         invoice.setTotal(value);
                         invoice.getSupplier().getTemplate().setTotal(zone);
                     }
+                }
+                if ((double) value != 0.0) {
+                    invoice.autoCompleteManualAnalysis();
                 }
             }
         }
@@ -533,7 +538,8 @@ public class UploadHandler {
             resp.put("grayPrevButton", fileName.getPageNumber() == 0);
             resp.put("grayNextButton", fileName.getPageNumber() == fileNames.size() - 1);
         }
-        String redFields = OcrHandler.getInstance().getInvoice().redFields();
+        if (!OcrHandler.getInstance().getInvoice().isValid()) {
+            String redFields = OcrHandler.getInstance().getInvoice().redFields();
             if (redFields.contains("date")) {
                 resp.put("redDate", true);
             }
@@ -552,8 +558,7 @@ public class UploadHandler {
             if (redFields.contains("total")) {
                 resp.put("redTotal", true);
             }
-
-
+        }
 
         return resp;
     }

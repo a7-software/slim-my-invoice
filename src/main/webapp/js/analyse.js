@@ -32,13 +32,9 @@ $(function () {
         }
     }
 
-    function successHandler(data) {
-        // Redirect to login page if no user logged in.
-        if (data.user == null) {
-            window.location.replace("login.jsp");
-        }
-
+    function initialisePage() {
         $(".ft-container").remove();
+        $(".rect").remove();
 
         $("#user").text(" ");
         $("#img_name").text(" ");
@@ -58,6 +54,12 @@ $(function () {
         $("#vatRate").text(" ");
         $("#vat").text(" ");
         $("#total").text(" ");
+        $('#dateEntry').val("");
+        $('#idEntry').val("");
+        $('#subtotalEntry').val("");
+        $('#vatRateEntry').val("");
+        $('#vatEntry').val("");
+        $('#totalEntry').val("");
 
         document.getElementById("date_template").style.visibility = "hidden";
         document.getElementById("id_template").style.visibility = "hidden";
@@ -110,6 +112,15 @@ $(function () {
         document.getElementById("vatRate").style.backgroundColor = "#f5f5f5";
         document.getElementById("vat").style.backgroundColor = "#f5f5f5";
         document.getElementById("total").style.backgroundColor = "#f5f5f5";
+    }
+
+    function successHandler(data) {
+        // Redirect to login page if no user logged in.
+        if (data.user == null) {
+            window.location.replace("login.jsp");
+        }
+
+        initialisePage()
 
         // Message content
         if (data.result == "success") {

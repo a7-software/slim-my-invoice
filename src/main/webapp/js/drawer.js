@@ -40,12 +40,13 @@
             };
             $(this).mousedown(function (e) {
                 $(".ft-container").remove();
+                $(".rect").remove();
                 if (e.which != 1) {
                     return;
                 }
                 start.x = e.offsetX + 12;
                 start.y = e.offsetY;
-                $div = $("<div style='position: absolute;border: 1px solid black;'></div>");
+                $div = $("<div class='rect' style='position: absolute;border: 1px solid black;'></div>");
                 $(this).parent().append($div);
                 $div.css({left: start.x, top: start.y});
             }).mousemove(function (e) {
