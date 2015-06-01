@@ -331,7 +331,10 @@ public class UploadHandler {
             }
             if ("manual".equals(analysis)) {
                 try {
-                    manualAnalysis(reqs);
+                    String analysisError = manualAnalysis(reqs);
+                    if (analysisError != null) {
+                        return wrongJson(analysisError);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     return wrongJson(e.getMessage());
@@ -343,7 +346,10 @@ public class UploadHandler {
                     return wrongJson("Please provide a selection zone!");
                 } else {
                     try {
-                        singleZoneAnalysis(analysis);
+                        String analysisError = singleZoneAnalysis(analysis);
+                        if (analysisError != null) {
+                            return wrongJson(analysisError);
+                        }
                     } catch (TesseractException e) {
                         e.printStackTrace();
                         return wrongJson("Unexpected error while retrieving performing OCR!");
@@ -361,7 +367,7 @@ public class UploadHandler {
     }
 
     // Handles requests for handling manual entries.
-    private void manualAnalysis(HttpParam reqs) throws Exception {
+    private String manualAnalysis(HttpParam reqs) throws Exception {
 
         Invoice invoice = OcrHandler.getInstance().getInvoice();
         String field = reqs.getParam("field");
@@ -369,11 +375,9 @@ public class UploadHandler {
         if (field.equals("date")) {
             String date = reqs.getParam("date").trim().equals("") ? Invoice.EMPTY : reqs.getParam("date").trim();
             invoice.setDate(date);
-            return;
         } else if (field.equals("ref")) {
             String id = reqs.getParam("id").trim().equals("") ? Invoice.EMPTY : reqs.getParam("id").trim();
             invoice.setRef(id);
-            return;
         } else {
             Double value = 0.0;
             if (field.equals("subtotal")) {
@@ -383,6 +387,9 @@ public class UploadHandler {
             } else if (field.equals("vatRate")) {
                 value = FormatHandler.getInstance().extractAmount(reqs.getParam("vatRate"));
                 checkValue(value);
+                if (value < 0) {
+                    return "The VAT rate cannot be negative!";
+                }
                 invoice.setVATrate(value);
             } else if (field.equals("vat")) {
                 value = FormatHandler.getInstance().extractAmount(reqs.getParam("vat"));
@@ -397,6 +404,7 @@ public class UploadHandler {
                 invoice.autoCompleteManualAnalysis();
             }
         }
+        return null;
     }
 
     private void checkValue(Double value) throws Exception {
@@ -413,7 +421,7 @@ public class UploadHandler {
     }
 
     // Handles request for OCRing a zone.
-    private void singleZoneAnalysis(String analysis) throws Exception {
+    private String singleZoneAnalysis(String analysis) throws Exception {
 
         Zone zone = areas.getLast().getZone(image);
         Invoice invoice = OcrHandler.getInstance().getInvoice();
@@ -436,6 +444,9 @@ public class UploadHandler {
                         invoice.setSubtotal(value);
                         invoice.getSupplier().getTemplate().setSubtotal(zone);
                     } else if (analysis.equals("vatRate")) {
+                        if (value < 0) {
+                            return "The retrieved value was negative and was ignored.";
+                        }
                         invoice.setVATrate(value);
                         invoice.getSupplier().getTemplate().setVATrate(zone);
                     } else if (analysis.equals("vat")) {
@@ -451,6 +462,7 @@ public class UploadHandler {
                 }
             }
         }
+        return null;
     }
 
     private JSONObject wrongJson(String message) {
@@ -474,7 +486,8 @@ public class UploadHandler {
     }
 
     private JSONObject addJSONData(JSONObject resp) {
-        return addDisplayData(addInvoiceData(addSupplierData(addImageData(addUserData(resp)))));
+        resp = addUserData(resp);
+        return addDisplayData(addInvoiceData(addSupplierData(addImageData(resp))));
     }
 
     private JSONObject addInvoiceData(JSONObject resp) {
@@ -679,7 +692,6 @@ public class UploadHandler {
                 }
             }
         }
-
         try {
             String analyseAction = OcrHandler.getInstance().ocrAutoAnalyse(language, image);
             OcrHandler.getInstance().getInvoice().autoCompleteAutoAnalysis();

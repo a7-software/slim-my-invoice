@@ -62,10 +62,8 @@ public class OcrHandler {
     public String ocrAutoAnalyse(String language, ImageHandler imageHandler) throws SQLException, TesseractException {
 
         OcrEngine.getInstance().setLanguage(language);
-
         BufferedImage image = imageHandler.getImage();
         String result = OcrEngine.getInstance().fullOcr(image);
-
         Fingerprint fingerprint = new Fingerprint(result);
         // Extract all suppliers from DB
         List<Supplier> supplierList = DbHandler.getInstance().retrieveAllSuppliersList();
@@ -87,7 +85,7 @@ public class OcrHandler {
                 supplier = HtmlParser.getInstance().retrieveSupplierFromVATNum(fingerprint.getVat());
                 invoice.setSupplier(supplier);
                 if (supplier != null) {
-                    ocrAutoDateAndAmountsAnalyse(supplier, result);// auto-analyse for date and amounts
+                    //ocrAutoDateAndAmountsAnalyse(supplier, result);// auto-analyse for date and amounts
                     UploadHandler.getInstance().setDisplaySaveSupplier(true);
                     UploadHandler.getInstance().setDisplayUpdateSupplier(false);
                     return "Supplier has been retrieved from online BCE database";
@@ -103,6 +101,7 @@ public class OcrHandler {
         }
     }
 
+    // To be implemented.
     private void ocrAutoDateAndAmountsAnalyse(Supplier supplier, String result) {
 
         String ocrWithoutSapce = result.replaceAll("\\s+", "").toLowerCase();

@@ -20,8 +20,7 @@ import java.util.List;
  */
 public class DbHandler {
 
-    private static final String databasePath = "/var/lib/slimmyinvoice/databases/";
-    private static final String databaseBaseUrl = "jdbc:sqlite:" + databasePath + "database";
+    private static final String databaseBaseUrl = "jdbc:sqlite:" + Properties.databasePath + "database";
     private static volatile DbHandler instance = null;
     private ConnectionSource connectionSource = null;
     private String databaseUrl;
@@ -36,8 +35,8 @@ public class DbHandler {
             synchronized (DbHandler.class) {
                 if (DbHandler.instance == null) {
                     DbHandler.instance = new DbHandler();
-                    Logger.getLogger("com.j256.ormlite.dao.DaoManager").setLevel(Level.ALL);
-                    Logger.getRootLogger().setLevel(Level.ALL);
+                    Logger.getLogger("com.j256.ormlite.dao.DaoManager").setLevel(Level.OFF);
+                    Logger.getRootLogger().setLevel(Level.OFF);
                 }
             }
         }

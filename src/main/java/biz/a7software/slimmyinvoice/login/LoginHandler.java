@@ -3,10 +3,7 @@ package biz.a7software.slimmyinvoice.login;
 import biz.a7software.slimmyinvoice.data.Address;
 import biz.a7software.slimmyinvoice.data.Supplier;
 import biz.a7software.slimmyinvoice.data.User;
-import biz.a7software.slimmyinvoice.helper.DbHandler;
-import biz.a7software.slimmyinvoice.helper.FormatHandler;
-import biz.a7software.slimmyinvoice.helper.HtmlParser;
-import biz.a7software.slimmyinvoice.helper.StringParams;
+import biz.a7software.slimmyinvoice.helper.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -30,8 +27,7 @@ public class LoginHandler {
     private static final String PASS = "ys$:E8@4gvz}/qh";
     private static volatile LoginHandler instance = null;
     private ConnectionSource connectionSource = null;
-    private String databasePath = "/var/lib/slimmyinvoice/databases/";
-    private String databaseUrl = "jdbc:sqlite:" + databasePath + "users.db";
+    private String databaseUrl = "jdbc:sqlite:" + Properties.databasePath + "users.db";
     private User user = null;
 
     private LoginHandler() {
@@ -42,8 +38,8 @@ public class LoginHandler {
             synchronized (LoginHandler.class) {
                 if (LoginHandler.instance == null) {
                     LoginHandler.instance = new LoginHandler();
-                    Logger.getLogger("com.j256.ormlite.dao.DaoManager").setLevel(Level.ALL);
-                    Logger.getRootLogger().setLevel(Level.ALL);
+                    Logger.getLogger("com.j256.ormlite.dao.DaoManager").setLevel(Level.OFF);
+                    Logger.getRootLogger().setLevel(Level.OFF);
                 }
             }
         }

@@ -54,7 +54,7 @@ public class Invoice {
     }
 
     public Boolean isAmountValid() {
-        return compareDoubleIgnoreRounding(subtotal + VAT, total) && compareDoubleIgnoreRounding(subtotal * (VATrate/100), VAT);
+        return compareDoubleIgnoreRounding(subtotal + VAT, total) && compareDoubleIgnoreRounding(subtotal * (VATrate / 100), VAT);
     }
 
     public Boolean compareDoubleIgnoreRounding(Double d1, Double d2) {

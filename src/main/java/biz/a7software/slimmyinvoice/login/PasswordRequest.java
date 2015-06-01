@@ -59,13 +59,13 @@ public class PasswordRequest {
                 String tempPassword = generatePassword();
                 updated.setPassword(sha256(tempPassword));
                 updated.setMustUpdate(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 2); // 2 days delay to update password
+                EmailHandler.getInstance().sendEmail(vat, tempPassword, updated.getName(), updated.getEmail());
                 LoginHandler.getInstance().updateUser(updated);
                 DbHandler.getInstance().configureForUser(updated);
                 LoginHandler.getInstance().setUser(updated);
-                EmailHandler.getInstance().sendEmail(vat, tempPassword, updated.getName(), updated.getEmail());
             } catch (MessagingException e) {
                 e.printStackTrace();
-                return wrongJson("Unexpected error while sending email!");
+                return wrongJson("Unexpected error while sending email! Password was not reset.");
             } catch (SQLException e) {
                 e.printStackTrace();
                 return wrongJson("Unexpected error while renewing password!");

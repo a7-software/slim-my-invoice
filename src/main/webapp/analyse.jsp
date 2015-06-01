@@ -185,8 +185,8 @@
                         <td width="27%"><pre id="vatRate"></pre></td>
                         <td width="4%"> </td>
                         <td width="20%"><input type="text" id="vatRateEntry"
-                                               onkeypress="if(this.value.match(/[^\d|^\\.|^\\,|^\\-]/)) this.value=this.value.replace(/[^\d|^\\.|^\\,|^\\-]/,'')"
-                                               onkeyup   ="if(this.value.match(/[^\d|^\\.|^\\,|^\\-]/)) this.value=this.value.replace(/[^\d|^\\.|^\\,|^\\-]/,'')"/></td>
+                                               onkeypress="if(this.value.match(/[^\d|^\\.|^\\,]/)) this.value=this.value.replace(/[^\d|^\\.|^\\,]/,'')"
+                                               onkeyup   ="if(this.value.match(/[^\d|^\\.|^\\,]/)) this.value=this.value.replace(/[^\d|^\\.|^\\,]/,'')"/></td>
                         <td width="4%"> </td>
                         <td width="30%"><button id="vatRate_ocr" type="button" class="btn btn-default">OCR</button> <button id="vatRate_manual" type="button" class="btn btn-default">Manual</button></td>
                     </tr>

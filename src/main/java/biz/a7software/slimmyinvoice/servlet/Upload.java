@@ -1,6 +1,5 @@
 package biz.a7software.slimmyinvoice.servlet;
 
-import biz.a7software.slimmyinvoice.helper.DbHandler;
 import biz.a7software.slimmyinvoice.helper.StringParams;
 import biz.a7software.slimmyinvoice.helper.UploadHandler;
 import biz.a7software.slimmyinvoice.login.LoginHandler;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,30 +30,17 @@ public class Upload extends HttpServlet {
     // Handles GET requests.
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("upload - get");
-
 
         StringParams reqs = new StringParams(request.getParameterMap());
 
-        if (false) {
-            try {
-                LoginHandler.getInstance().resetUserTable();
-                DbHandler.getInstance().refreshDatabase();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
         JSONObject resp = UploadHandler.getInstance(getServletContext()).handleGETRequest(reqs);
 
-        System.out.println("GET RESP = " + resp);
         writeToResponse(response, resp);
     }
 
     // Handles POST requests.
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("upload - post");
 
         JSONObject resp;
 
@@ -72,7 +57,6 @@ public class Upload extends HttpServlet {
                 resp = wrongJSON("Internal error: cannot parse request!");
             }
         }
-        System.out.println("POST RESP = " + resp);
         writeToResponse(response, resp);
     }
 
@@ -81,6 +65,16 @@ public class Upload extends HttpServlet {
         JSONObject resp = new JSONObject();
         resp.put("result", "error");
         resp.put("message", message);
+        resp = addUserData(resp);
+        return resp;
+    }
+
+    private JSONObject addUserData(JSONObject resp) {
+        if (LoginHandler.getInstance().getUser() == null) {
+            resp.put("user", JSONObject.NULL);
+        } else {
+            resp.put("user", LoginHandler.getInstance().getUser());
+        }
         return resp;
     }
 

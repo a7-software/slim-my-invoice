@@ -8,11 +8,6 @@ slim-my-invoice is Web Application that aims at facilitating invoices encoding u
 
 * [Apache Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-## Demo
-
-The Server and the Web Application are deployed and accessible [here](http://slimmyinvoice.org) on `http://slimmyinvoice.org` for testing and demo purposes.
-Note that you need to provide a valid Belgian VAT number as username.
-
 ## Building
 
 ### With Maven
@@ -26,7 +21,7 @@ Building is achieved with the following command:
 This command fetches all the project dependencies and creates a WAR file named `slimmyinvoice.war` in the `/target` folder.
 
 ## Deployment
-In order to deploy the server, please follow the next step:
+In order to deploy the server, please follow the next steps:
 * Install [Java 6](http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase6-419409.html) and [Tomcat 7](https://tomcat.apache.org/download-70.cgi) on a machine
 * Create a folder `/var/lib/slimmyinvoice/databases/` and allow read/write permissions on that folder
 * Rename the WAR file to `ROOT.war`
@@ -36,6 +31,14 @@ Tomcat will then automatically deploy the server and the web application should 
 
 The following command may be useful to display the logs:
 * `cat /var/log/tomcat7/catalina.out`
+
+
+## Configuration
+For the passwrod recovery functionnality to work, you need to configure the `Properties` class with an email address, and SMTP configuration.
+
+The path to the database can also be modified in this class. 
+Ensure that the provided directory has read/write privileges.
+
 
 ## Acknowledgements
 
