@@ -54,6 +54,9 @@ public class Invoice {
     }
 
     public Boolean isAmountValid() {
+        if (subtotal == 0.0 && VATrate == 0.0 && VAT == 0.0 && total == 0.0) {
+            return false;
+        }
         return compareDoubleIgnoreRounding(subtotal + VAT, total) && compareDoubleIgnoreRounding(subtotal * (VATrate / 100), VAT);
     }
 
@@ -161,11 +164,11 @@ public class Invoice {
         if (ref == EMPTY) {
             redFields += "ref:";
         }
-        if ((!isAmountValid() || !(subtotal == 0.0 && VATrate == 0.0 && VAT == 0.0 && total == 0.0)) && !(total == subtotal)) {
+        if (!isAmountValid()) {
             if (subtotal == 0.0) {
                 redFields += "sub:";
             }
-            if (VATrate == 0.0) {
+            if (VATrate <= 0.0) {
                 redFields += "rate:";
             }
             if (VAT == 0.0) {
@@ -176,27 +179,40 @@ public class Invoice {
             }
         }
 
+        int neg = 0;
+        if (subtotal < 0) {
+            neg ++;
+        }
+        if (VAT < 0) {
+            neg ++;
+        }
+        if (total < 0) {
+            neg ++;
+        }
+
+        if (!(neg == 3 || (neg == 2 && VAT == 0) || neg == 0)) {
+            redFields += "vat:total:rate:sub";
+        }
+
         Double VATrate = this.VATrate / 100;
-        if (subtotal != 0.0 && VATrate != 0.0 && VAT != 0.0 && total != 0.0) {
-            if (compareDoubleIgnoreRounding(subtotal * (1 + VATrate), total)) {
-                if (!compareDoubleIgnoreRounding(total, subtotal + VAT)) {
-                    redFields += "vat:";
-                }
-            } else if (compareDoubleIgnoreRounding(subtotal * VATrate, VAT)) {
-                if (!compareDoubleIgnoreRounding(total, subtotal + VAT)) {
-                    redFields += "total:";
-                }
-            } else if (compareDoubleIgnoreRounding(subtotal + VAT, total)) {
-                if (!compareDoubleIgnoreRounding(subtotal * VATrate, VAT)) {
-                    redFields += "rate:";
-                }
-            } else if (compareDoubleIgnoreRounding(VAT * (1 + VATrate), total * VATrate)) {
-                if (!compareDoubleIgnoreRounding(total, subtotal + VAT)) {
-                    redFields += "sub:";
-                }
-            } else {
-                redFields += "vat:total:rate:sub";
+        if (compareDoubleIgnoreRounding(subtotal * (1 + VATrate), total) && VATrate >= 0) {
+            if (!compareDoubleIgnoreRounding(total, subtotal + VAT)) {
+                redFields += "vat:";
             }
+        } else if (compareDoubleIgnoreRounding(subtotal * VATrate, VAT) && VATrate >= 0) {
+            if (!compareDoubleIgnoreRounding(total, subtotal + VAT)) {
+                redFields += "total:";
+            }
+        } else if (compareDoubleIgnoreRounding(subtotal + VAT, total)) {
+            if (!compareDoubleIgnoreRounding(subtotal * VATrate, VAT) || VATrate <= 0) {
+                redFields += "rate:";
+            }
+        } else if (compareDoubleIgnoreRounding(VAT * (1 + VATrate), total * VATrate) && VATrate >= 0) {
+            if (!compareDoubleIgnoreRounding(total, subtotal + VAT)) {
+                redFields += "sub:";
+            }
+        } else {
+            redFields += "vat:total:rate:sub";
         }
         return redFields;
     }

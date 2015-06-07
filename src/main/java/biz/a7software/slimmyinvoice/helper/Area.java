@@ -9,11 +9,9 @@ public class Area {
 
     private static final String REGEX_COORDINATE = "^(\\d+,){3}\\d+(:(\\w|[;/\\-\\.])*)?$";
 
-    private String name = null;
     private int x, y, w, h;
 
-    private Area(String name, String value) {
-        this.name = name;
+    private Area(String value) {
         String[] values = value.split(":");
         String[] point = values[0].split(",");
         x = Math.max(0, Integer.parseInt(point[0]));
@@ -30,11 +28,11 @@ public class Area {
     }
 
 
-    public static Area create(String name, String value) {
+    public static Area create(String value) {
         if (!isRegular(value)) {
             return null;
         }
-        return new Area(name, value);
+        return new Area(value);
     }
 
     private static boolean isRegular(String value) {
@@ -58,9 +56,6 @@ public class Area {
         return h;
     }
 
-    public String getName() {
-        return name;
-    }
 
     // Converts an Area to a Zone.
     public Zone getZone(ImageHandler image) {

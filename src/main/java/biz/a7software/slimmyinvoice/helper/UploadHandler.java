@@ -355,7 +355,7 @@ public class UploadHandler {
                         return wrongJson("Unexpected error while retrieving performing OCR!");
                     } catch (Exception e) {
                         e.printStackTrace();
-                        return wrongJson(e.getMessage());
+                        return wrongJson("Cannot detect a number!");
                     }
                     if (displaySaveSupplier == false) {
                         displayUpdateSupplier = true;
@@ -427,39 +427,40 @@ public class UploadHandler {
         Invoice invoice = OcrHandler.getInstance().getInvoice();
 
         String result = OcrHandler.getInstance().ocrArea(areas.getLast(), image);
-        if (result != null && !result.equals("")) {
-            result = result.trim();
-            if ("date".equals(analysis)) {
-                invoice.setDate(result);
-                invoice.getSupplier().getTemplate().setDate(zone);
-            } else if ("ref".equals(analysis)) {
-                invoice.setRef(result);
-                invoice.getSupplier().getTemplate().setId(zone);
+        if (result == null || result.equals("")) {
+            return "The zone is empty! The previous value is kept.";
+        }
+        result = result.trim();
+        if ("date".equals(analysis)) {
+            invoice.setDate(result);
+            invoice.getSupplier().getTemplate().setDate(zone);
+        } else if ("ref".equals(analysis)) {
+            invoice.setRef(result);
+            invoice.getSupplier().getTemplate().setId(zone);
+        } else {
+            Double value = FormatHandler.getInstance().extractAmount(result);
+            if (value == null) {
+                throw new Exception("The analysed value cannot be converted to a number! Please consider xxx.xx syntax for numbers.");
             } else {
-                Double value = FormatHandler.getInstance().extractAmount(result);
-                if (value == null) {
-                    throw new Exception("The analysed value cannot be converted to a number! Please consider xxx.xx syntax for numbers.");
-                } else {
-                    if (analysis.equals("subtotal")) {
-                        invoice.setSubtotal(value);
-                        invoice.getSupplier().getTemplate().setSubtotal(zone);
-                    } else if (analysis.equals("vatRate")) {
-                        if (value < 0) {
-                            return "The retrieved value was negative and was ignored.";
-                        }
-                        invoice.setVATrate(value);
-                        invoice.getSupplier().getTemplate().setVATrate(zone);
-                    } else if (analysis.equals("vat")) {
-                        invoice.setVAT(value);
-                        invoice.getSupplier().getTemplate().setVAT(zone);
-                    } else if (analysis.equals("total")) {
-                        invoice.setTotal(value);
-                        invoice.getSupplier().getTemplate().setTotal(zone);
+                if (analysis.equals("subtotal")) {
+                    invoice.setSubtotal(value);
+                    invoice.getSupplier().getTemplate().setSubtotal(zone);
+                } else if (analysis.equals("vatRate")) {
+                    if (value < 0) {
+                        return "The retrieved value was negative and was ignored.";
                     }
+                    invoice.setVATrate(value);
+                    invoice.getSupplier().getTemplate().setVATrate(zone);
+                } else if (analysis.equals("vat")) {
+                    invoice.setVAT(value);
+                    invoice.getSupplier().getTemplate().setVAT(zone);
+                } else if (analysis.equals("total")) {
+                    invoice.setTotal(value);
+                    invoice.getSupplier().getTemplate().setTotal(zone);
                 }
-                if ((double) value != 0.0) {
-                    invoice.autoCompleteManualAnalysis();
-                }
+            }
+            if ((double) value != 0.0) {
+                invoice.autoCompleteManualAnalysis();
             }
         }
         return null;

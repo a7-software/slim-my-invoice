@@ -2,7 +2,7 @@ package biz.a7software.slimmyinvoice.helper;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -12,10 +12,9 @@ import java.util.Properties;
  */
 public class AreaList implements Iterable<Area> {
 
-    private final List<Area> list;
+    private List<Area> list = null;
 
     public AreaList(String areas) {
-        list = new ArrayList<Area>();
         init(areas);
     }
 
@@ -28,30 +27,26 @@ public class AreaList implements Iterable<Area> {
         Properties ocrAreas = new Properties();
         try {
             ocrAreas.load(sr);
+            int size = ocrAreas.size();
+            Area[] tempList = new Area[size];
             for (Object key : ocrAreas.keySet()) {
                 String name = key.toString();
-                Area area = Area.create(name, ocrAreas.getProperty(name));
+                Area area = Area.create(ocrAreas.getProperty(name));
                 if (area != null) {
-                    list.add(area);
+                    tempList[new Integer(name)] = area;
                 }
             }
+            list = Arrays.asList(tempList);
         } catch (IOException e) {
             e.printStackTrace();
             // Should really never happen
         }
     }
 
-    // Adds an Area to the list.
-    public void add(Area area) {
-        if (area != null) {
-            list.add(area);
-        }
-    }
-
     // Gets last area of the list.
     public Area getLast() {
         if (list.size() >= 1) {
-            return list.get(0);
+            return list.get(list.size() - 1);
         } else {
             return null;
         }
